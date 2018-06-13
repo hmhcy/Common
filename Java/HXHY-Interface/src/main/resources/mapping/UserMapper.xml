@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxhy.api.dao.UserMapper">
+
+	<!--实体映射-->
+	<resultMap id="BaseResultMap" type="com.hxhy.api.model.User">
+		<!---->
+		<id property="id" column="id" />
+		<!---->
+		<result property="username" column="username" />
+		<!---->
+		<result property="password" column="password" />
+		<!---->
+		<result property="passwordSalt" column="password_salt" />
+		<!---->
+		<result property="realName" column="real_name" />
+		<!---->
+		<result property="phone" column="phone" />
+		<!---->
+		<result property="createtime" column="createtime" />
+		<!---->
+		<result property="avatar" column="avatar" />
+		<!---->
+		<result property="userToken" column="user_token" />
+		<!---->
+		<result property="status" column="status" />
+		<!---->
+		<result property="nickname" column="nickname" />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+	id as id,	
+	username as username,	
+	password as password,	
+	password_salt as passwordSalt,	
+	real_name as realName,	phone as phone,	
+	createtime as createtime,	avatar as avatar,	
+	user_token as userToken, status as status, nickname as nickname
+	</sql>
+
+	<!-- 查询（根据用户名查询） -->
+	<select id="getByAccount" resultType="com.hxhy.api.model.User">
+		select
+		<include refid="Base_Column_List" />
+		from t_user where username = #{username}
+	</select>
+	
+	<!-- 查询（根据电话号码查询） -->
+	<select id="getByPhone" resultType="com.hxhy.api.model.User">
+		select
+		<include refid="Base_Column_List" />
+		from t_user where phone = #{phone}
+	</select>
+	
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.hxhy.api.model.User" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM t_user
+		 WHERE id = #{id}
+	</select>
+	
+	<!-- 查询（查重） -->
+	<select id="userExist" resultType="java.lang.Integer" parameterType="java.lang.String">
+		 SELECT COUNT(*)
+		 FROM t_user
+		 WHERE id = #{param}
+		 OR username = #{param}
+		 OR phone = #{param}
+	</select>
+	
+	<!-- 查询（根据用户id查重） -->
+	<select id="userIdExist" resultType="java.lang.Integer" parameterType="java.lang.String">
+		 SELECT COUNT(*)
+		 FROM t_user
+		 WHERE id = #{id}
+	</select>
+	
+
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM t_user
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.hxhy.api.model.User">
+		 INSERT INTO t_user
+ 		(id,username,password,password_salt,real_name,phone,createtime,avatar,user_token,status,nickname) 
+		 VALUES 
+ 		(#{id},#{username},#{password},#{passwordSalt},#{realName},#{phone},NOW(),#{avatar},#{userToken},#{status},#{nickname}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.hxhy.api.model.User">
+		 INSERT INTO t_user
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="password != null">
+				 password,
+			</if>
+			<if test="passwordSalt != null">
+				 password_salt,
+			</if>
+			<if test="realName != null">
+				 real_name,
+			</if>
+			<if test="phone != null">
+				 phone,
+			</if>
+			<if test="createtime != null">
+				 createtime,
+			</if>
+			<if test="avatar != null">
+				 avatar,
+			</if>
+			<if test="userToken != null">
+				 user_token,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="password!=null">
+				 #{password},
+			</if>
+			<if test="passwordSalt!=null">
+				 #{passwordSalt},
+			</if>
+			<if test="realName!=null">
+				 #{realName},
+			</if>
+			<if test="phone!=null">
+				 #{phone},
+			</if>
+			<if test="createtime!=null">
+				 #{createtime},
+			</if>
+			<if test="avatar!=null">
+				 #{avatar},
+			</if>
+			<if test="userToken!=null">
+				 #{userToken},
+			</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.hxhy.api.model.User">
+		 UPDATE t_user
+ 		 <set> 
+			<if test="username != null">
+				 username = #{username},
+			</if>
+			<if test="password != null">
+				 password = #{password},
+			</if>
+			<if test="passwordSalt != null">
+				 password_salt = #{passwordSalt},
+			</if>
+			<if test="realName != null">
+				 real_name = #{realName},
+			</if>
+			<if test="phone != null">
+				 phone = #{phone},
+			</if>
+			<if test="createtime != null">
+				 createtime = #{createtime},
+			</if>
+			<if test="avatar != null">
+				 avatar = #{avatar},
+			</if>
+			<if test="userToken != null">
+				 user_token = #{userToken},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+			<if test="nickname != null">
+				 nickname = #{nickname},
+			</if>
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.hxhy.api.model.User">
+		 UPDATE t_user
+		 SET 
+			 username = #{username},
+			 password = #{password},
+			 password_salt = #{passwordSalt},
+			 real_name = #{realName},
+			 phone = #{phone},
+			 createtime = #{createtime},
+			 avatar = #{avatar},
+			 user_token = #{userToken},
+			 status = #{status},
+			 nickname = #{nickname}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>
